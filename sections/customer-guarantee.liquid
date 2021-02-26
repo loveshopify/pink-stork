@@ -1,0 +1,81 @@
+<section class="guarantee ">
+  <div class="text-area-info center">
+    <h2>{{ section.settings.text-area-info }}</h2>
+  </div>
+  <div class="container">
+    <div class="guarantee-pages">
+      {% for block in section.blocks %}
+      <div class="guarantee-content">
+        <div class="guarantee-loop" >
+          <img src="{{ block.settings.images | img_url:"master" }}">
+        </div>
+        <div class="guarantee-box center">
+          <h5>{{ block.settings.title }}</h5>
+          <div class="sub-description">
+            {{ block.settings.description }}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+  {
+    "name": "Image Text",
+	"class":"background-image-with-text",
+    "settings": [
+    {
+    "type": "image_picker",
+    "id": "guarantee_banner_images",
+    "label": "Images"
+    },
+    {
+    "type" : "text",
+    "id" : "text-area-info",				
+    "label" : "Title"
+    },
+	{
+      "type": "image_picker",
+      "id": "page_logo",
+      "label": "Page Logo"
+    }
+	],
+	"blocks" : [
+		{
+			"type" : "C2_Feature",	
+			"name" : "C2 Feature",
+			"settings" : [
+                 {
+                    "type": "image_picker",
+                    "id": "images",
+                    "label": "Images"
+                },
+				{
+					"type" : "text",
+                    "id" : "title",				
+                    "label" : "Title"
+				},
+				{
+					"type" : "textarea",
+                    "id" : "description",				
+                    "label" : "Description"
+				}
+			]
+		}
+	],	
+    "presets": [
+      {
+        "name": "Image Text",
+        "category": "Text"       
+      }
+    ]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

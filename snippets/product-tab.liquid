@@ -1,0 +1,53 @@
+{% assign details = product.description | split: '<!-- details -->' %}
+{% assign symptoms = product.description | split: '<!-- symptoms -->' %}
+{% assign benefits = product.description | split: '<!-- benefits -->' %}
+
+
+  {% if details[1] != blank %}
+<div class="product-description-tab">
+  <div class="tab-info">
+    <div class="description-content">
+      <div class="description-tabs-content">
+        <div class="description-tabs-menu clearfix">
+          <ul>
+            {% assign a_tab = true %}
+            
+            {% if details[1] != blank %}
+            <li><a {% if a_tab %}class="active-tab-menu"{% endif %} href="javascript:void(0);" data-tab="pro-details">PRODUCT DESCRIPTION</a></li>
+            {% assign a_tab = false %}
+            {% endif %}
+            
+            {% if symptoms[1] != blank %}
+            <li><a {% if a_tab %}class="active-tab-menu"{% endif %} href="javascript:void(0);" data-tab="pro-compatibility">Symptoms</a></li>
+            {% assign a_tab = false %}
+            {% endif %}
+            
+            {% if benefits[1] != blank %}
+            <li><a {% if a_tab %}class="active-tab-menu"{% endif %} href="javascript:void(0);" data-tab="pro-benefits">Benefits</a></li>
+            {% assign a_tab = false %}
+            {% endif %}
+            
+          </ul>
+        </div>
+        <div class="product-info-tab">
+          {% assign a_tab_desc = true %}
+          {% if details[1] != blank %}
+          	<div class="pro-details description-tabs {% if a_tab_desc %}first-tab{% endif %}"> {{ details[1] }}</div>
+            {% assign a_tab_desc = false %}
+          {% endif %}
+
+          {% if symptoms[1] != blank %}
+          	<div class="pro-compatibility description-tabs  {% if a_tab_desc %}first-tab{% endif %}">{{ symptoms[1] }}</div>
+            {% assign a_tab_desc = false %}
+          {% endif %}
+          
+          {% if benefits[1] != blank %}
+          	<div class="pro-benefits description-tabs  {% if a_tab_desc %}first-tab{% endif %}">{{ benefits[1] }}</div>
+            {% assign a_tab_desc = false %}
+          {% endif %}
+      </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}

@@ -1,0 +1,10 @@
+.idme-shopify {
+  margin: 10px 0;
+}
+
+.idme-btn-unify,
+.idme-btn-affinity,
+.idme-btn-verification,
+.idme-shopify {
+  display: block;
+}

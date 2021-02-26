@@ -1,0 +1,23 @@
+
+        {% if product.metafields.opinew_metafields['stars_lists'] != blank %}
+                {{ product.metafields.opinew_metafields['stars_lists'] }}
+        {% else %}
+                   
+            <div class="opinew-stars-plugin-link opinew-list-stars-disable" onclick="window.location.href = 'https://{{shop.domain}}{{product.url}}'" style="
+            text-decoration: none;
+            ">
+              <span class="opinew-star-plugin-inside">
+              
+                <i class="stars-color opw-noci opw-noci-star-empty" aria-hidden="true"></i>
+                <i class="stars-color opw-noci opw-noci-star-empty" aria-hidden="true"></i>
+                <i class="stars-color opw-noci opw-noci-star-empty" aria-hidden="true"></i>
+                <i class="stars-color opw-noci opw-noci-star-empty" aria-hidden="true"></i>
+                <i class="stars-color opw-noci opw-noci-star-empty" aria-hidden="true"></i>
+                
+            </span>
+                <span class="opinew-no-reviews-stars-plugin" onMouseOver="this.style.color='#c45500'"
+               onMouseOut="this.style.color='inherit'"><b>
+                    
+                </b></span>
+            </div>
+             {% endif %}

@@ -1,0 +1,83 @@
+<a name="pagecontent" id="pagecontent"></a>
+<div class="login-page-space">
+<div class="sixteen columns clearfix collection_nav">
+  <div class="page-title-info">
+<!--     <div class="store-logo-img">
+         <img src="https://cdn.shopify.com/s/files/1/0121/9143/2800/files/8.png">
+           </div> -->
+    <h1 class="center title">{{ 'customer.register.title' | t }}</h1>
+  </div>
+</div>
+  <div class="store_email_part"> 
+    <div class="contact_info">
+      <p class="text-center"><a href="mailto:cs@pinkstork.com">cs@pinkstork.com</a></p>
+    </div>
+  </div>
+<div class="section clearfix">
+  <div class="six columns offset-by-five form-data-label">
+    <br class="clear" />
+    <div id="customer">
+      <!-- Create Customer -->
+      <div id="create-customer">
+
+        {% form 'create_customer' %}
+        {{ form.errors | default_errors }}
+
+        <div id="first_name" class="form-data clearfix large_form">
+          <label for="first_name" class="login">{{ 'customer.register.first_name' | t }}</label>
+          <input type="text" value="" name="customer[name]" id="name" class="large" size="30" placeholder="Enter Your Name"/>
+        </div>
+        
+       {% comment %}  <div id="last_name" class="form-data clearfix large_form">
+          <label for="last_name" class="login">{{ 'customer.register.last_name' | t }}</label>
+          <input type="text" value="" name="customer[name]" id="name" class="large" size="30" />
+        </div>
+{% endcomment %}
+        <div id="email" class="form-data clearfix large_form">
+          <label for="email" class="login">{{ 'customer.register.email' | t }}</label>
+          <input type="email" value="" name="customer[email]" id="email" class="large" size="30" placeholder="Enter Your Email" />
+        </div>
+
+        <div id="password" class="form-data clearfix large_form">
+           <label for="password" class="login">{{ 'customer.register.password' | t }}</label>
+          <input type="password" value="" name="customer[password]" id="password" class="large password" size="30" placeholder="Enter Your Password"/>
+        </div>
+
+        {% if section.settings.text %}
+        {{ section.settings.text }}
+        {% endif %}
+
+        <div class="action_bottom sign-up-btn">
+          <div class="submint-contact-form">
+            <input class="btn action_button" type="submit" value="{{ 'customer.register.sign_up' | t }}" />
+          </div>
+          <div class="forget-password-part">
+            <p class="center account-sign" >
+              Already have an account? {{ 'customer.register.sign_in_html' | t | customer_login_link }}
+            </p>
+          </div>
+        </div>
+
+        {% endform %}
+      </div><!-- /#create-customer -->
+    </div>
+  </div>
+  </div>
+</div>
+
+
+
+
+{% schema %}
+  {
+    "name": "Register",
+    "class": "register-section",
+    "settings": [
+      {
+        "type": "richtext",
+        "id": "text",
+        "label": "Text"
+      }
+    ]
+  }
+{% endschema %}

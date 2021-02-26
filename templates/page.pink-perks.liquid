@@ -1,0 +1,30 @@
+<a name="pagecontent" id="pagecontent"></a>
+
+  <div class="page-title-info center">
+    {% if settings.page-secondary-img != blank %}
+    <div class="store-logo-img"> 
+      <img src="{{ settings.page-secondary-img | img_url : "master" }}">
+    </div>
+    {% endif %}
+    <h1 class=" title center">
+      {{ page.title }}
+    </h1>
+  </div>
+  <div class="pink-perks-pages">
+    {% section 'image-with-text-pink-perks' %}
+    <div class="sub-container">
+      <div class="member-benefits">
+        {% section 'member-benefits' %}
+      </div>
+      <div class="responsibilities-text-pink">
+        {% section 'responsibilities-text-pink' %}
+      </div>
+      <div class="featured-text-pink">
+        {% section 'featured-text-pink' %}
+      </div>
+    </div>
+    <div class="join-program-our">
+      {% section 'join-program-pink'  %}
+    </div>
+  </div>
+

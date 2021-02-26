@@ -1,0 +1,143 @@
+<div class="page-title-info center">
+  {% if settings.page-secondary-img != blank %}
+    <div class="store-logo-img"> 
+      <img src="{{ settings.page-secondary-img | img_url : "master" }}">
+    </div>
+  {% endif %}
+  <h1 class=" title center">
+    {{ page.title }}
+  </h1>  
+  <div class="store_email_part">
+    <div class="contact_info">
+      <p>{{ section.settings.sub_info }}</p>
+      <p><a href="mailto:{{ section.settings.email }}">{{ section.settings.email }}</a></p>
+    </div>
+  </div>     
+</div>
+{% comment %}
+<div class="wholesale-form-part">
+  <div class="wholesale-data">
+  	{% form 'contact' %}
+      {% if form.posted_successfully? %}
+        <p class="quote">{{ 'contact.form.post_success' | t }}</p>
+      {% endif %}
+
+      {% if form.errors %}
+        <p class="quote">{{ 'general.forms.post_error' | t }}</p>
+
+       {% assign message = 'contact.form.message' | t %}
+        <ul class="center">
+          {% for field in form.errors %}
+            {% if field == 'form' %}
+              <li>
+                {{ form.errors.messages[field] }}
+              </li>
+            {% else %}
+              <li>
+                {% assign field_name = field | replace: 'body', message %}
+                {{ 'general.forms.post_field_error_html' | t: field: field_name, error: form.errors.messages[field] }}
+              </li>
+            {% endif %}
+          {% endfor %}
+         </ul>
+      {% endif %}
+ 
+       <br class="clear" />
+        <div class="name-email-form">
+          <div class="name-wholesale first-row-form">
+            {% assign name_attr = 'contact.form.name' | handle %}
+            <label for="contactFormName">YOUR NAME*</label>
+            <input type="text" id="contactFormName" name="contact[{{ name_attr }}]" placeholder="Enter Your name" autocapitalize="words" value="{% if form[name_attr] %}{{ form[name_attr] }}{% elsif customer %}{{ customer.name }}{% endif %}" required="required">
+          </div>
+          <div class="email-wholesale first-row-form">
+            <label for="contactFormEmail">YOUR EMAIL*</label>
+            <input type="email" id="contactFormEmail" name="contact[email]" placeholder="Enter Your email address" autocorrect="off" autocapitalize="off" value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}" required="required">
+          </div>
+          <div class="phone-wholesale first-row-form">
+            {% assign name_attr = 'contact.form.phone' | t | handle %}
+            <label for="contactFormPhone" class="hidden-label">PHONE NUMBER*</label>
+            <input type="tel" id="contactFormPhone" name="contact[{{ name_attr }}]" placeholder="Enter your number" pattern="[0-9\-]*" value="{% if form[name_attr] %}{{ form[name_attr] }}{% elsif customer %}{{ customer.phone }}{% endif %}">
+          </div>
+          <div class="company-name first-row-form">
+            <label for="ContactFormCompanyName">COMPANY NAME*</label>
+            <input type="text" id="ContactFormCompanyName" name="contact[COMPANY NAME]" placeholder="Enter Your name" required="required">
+          </div>
+          <div class="company-name first-row-form">
+            <label for="ContactFormWebsite">WEBSITE ADDRESS*</label>
+            <input type="text" id="ContactFormWebsite" name="contact[WEBSITE ADDRESS]" placeholder="http://" required="required">
+          </div>
+           <div class="company-name first-row-form">
+            <label for="contactFormCountry">Country</label>
+            <select id="Country" name="contact[Country]">
+               <option value="">Select Country</option>
+              {% include 'country-list' %}
+            </select>
+          </div>
+        </div>
+        <div class="name-email-form">
+<!--           <div class="company-name first-row-form">
+            <label for="ContactFormCity">WHERE ARE YOU LOCATED*</label>
+            <input type="text" id="ContactFormCity" name="contact[City]" placeholder="Enter your city" required="required">
+          </div> -->
+          <div class="company-name first-row-form">
+            <label for="ContactFormWebState">WHERE ARE YOU LOCATED?*</label>
+            <input type="text" id="ContactFormWebState" name="contact[State]" placeholder="Enter Your State" required="required">
+          </div>
+        </div>
+      <div class="shipping-address-part">
+        <div class="add-field-form">
+          <label for="contactFormTellBusiness">TELL US ABOUT YOUR BUSINESS*</label>
+          <textarea rows="5" id="contactFormShipping" name="contact[TELL US ABOUT YOUR BUSINESS]" placeholder="Type here" required="required"></textarea>
+        </div>
+      </div>
+      <div class="shipping-address-part">
+        <div class="add-field-form">
+          <label for="contactFormTellBusiness">WHAT LINES DO YOU CARRY*</label>
+          <textarea rows="5" id="contactFormCarry" name="contact[WHAT LINES DO YOU CARRY*]" placeholder="Type here" required="required"></textarea>
+        </div>
+      </div>
+    <div class="shipping-address-part">
+        <div class="add-field-form">
+          <label for="contactFormAbout">HOW DID YOU HEAR ABOUT US*</label>
+          <textarea rows="5" id="contactFormAbout" name="contact[HOW DID YOU HEAR ABOUT US]" placeholder="Type here" required="required"></textarea>
+        </div>
+      </div>
+     
+      {% if section.settings.text %}
+        {{ section.settings.text }}
+      {% endif %}
+    <div class="action_bottom sign-up-btn">
+      <div class="submint-contact-form">
+        <input type="submit" class="btn submit action_button" value="Submit" />
+      </div>
+      </div>
+    {% endform %}
+  </div>
+</div>
+{% endcomment %}
+<div class="wholesale-form-part">
+  <div style="margin:0 auto;" class="ccFormGenerator" id="cHN7GhDlcXjqemsAKQoxP9n7K"></div>
+</div>
+{% schema %}
+  {
+    "name": "Wholesale ",
+    "settings": [
+	{
+  "type": "text",
+  "id": "sub_info",
+  "label": "Info"
+  },
+{
+  "type": "text",
+  "id": "email",
+  "label": "Contact Email"
+  }
+	]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

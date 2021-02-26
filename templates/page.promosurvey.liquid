@@ -1,0 +1,21 @@
+<a name="pagecontent" id="pagecontent"></a>
+
+<div class="sixteen columns page clearfix">
+  <div class="page-title-info center">
+    {% if settings.page-secondary-img != blank %}
+    <div class="store-logo-img"> 
+      <img src="{{ settings.page-secondary-img | img_url : "master" }}">
+    </div>
+    {% endif %}
+    <h1 class=" title center">
+      {{ page.title }}
+    </h1>
+    <div class="store_email_part">
+      <div class="contact_info"> 
+       {{ page.content }}
+      </div>
+    </div>
+  </div>
+
+ {% section 'promosurvey' %}
+</div>

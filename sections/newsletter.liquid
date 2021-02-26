@@ -1,0 +1,94 @@
+{% comment %}
+** Newsletter - homepage partial **
+- Draggable section
+{% endcomment %}
+<div class="newsletter-home">
+  <div class="container newsletter-container">
+    <div class="newsletter-part">
+      <div class="image-newsletter-left">
+        <div class="image-newsletter">
+        	<img src="{{ section.settings.newsimage | img_url:"master" }}">
+        </div>
+      </div>
+      <div class="newsletter-form-right">
+      	  {% include 'include-newsletter' %}
+        {% include 'social-icon-header' %}
+      </div>
+    </div>
+  </div>
+</div>
+{% schema %}
+
+{
+  "name": "Newsletter",
+  "class": "newsletter-section",
+  "settings": [
+		{
+      "type": "image_picker",
+      "id": "newsimage",
+      "label": "Newsletter banner image"
+    },
+	{
+      "type": "text",
+      "id": "sub_title",
+      "label": "Sub Heading",
+      "default": "LET’S GET IN TOUCH"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_title",
+      "label": "Heading",
+      "default": "Subscribe"
+    },
+    {
+      "type": "richtext",
+      "id": "newsletter_text",
+      "label": "Subheading",
+      "default": "<p>Sign up to get the latest on sales, new releases and more …</p>"
+    },
+    {
+      "type": "checkbox",
+      "id": "display_first_name",
+      "label": "Show first name"
+    },
+    {
+      "type": "checkbox",
+      "id": "display_last_name",
+      "label": "Show last name"
+    },
+    {
+      "type": "select",
+      "id": "newsletter_section_text_align",
+      "label": "Text alignment",
+      "options": [
+         {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+     ],
+      "default": "center"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Upload banner background image",
+      "info":"1600 x 300px recommended"
+    }
+  ],
+  "presets": [{
+    "name": "Newsletter",
+    "category": "Promotional",
+    "settings": {
+    }
+  }]
+}
+
+{% endschema %}

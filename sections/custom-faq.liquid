@@ -1,0 +1,137 @@
+<div class="dm-custom-faq">
+  <div class="page-title-info center">
+    {% if settings.page-secondary-img != blank %}
+    <div class="store-logo-img"> 
+      <img src="{{ settings.page-secondary-img | img_url : "master" }}">
+    </div>
+    {% endif %}
+    <h1 class=" title center">
+      {{ section.settings.title }}
+    </h1>  
+  </div>
+  <div class="dm-faq-container">
+    <div class="dm-faq-content">
+    <ul class="accordion">
+      {% assign title = '' %}
+      {% assign previous = '' %}
+      {% assign childprevious = '' %}
+      
+      {% for block in section.blocks %}
+      
+      {% assign title = block.settings.head-title %}
+      {% unless title == previous %}
+      {% assign previous = block.settings.head-title %}
+        
+      <li>
+        <a class="toggle" id="faq-{{block.id}}"> {{ block.settings.head-title }}</a>
+        <ul class="subinner" style="display: none;">
+          {% for inner in section.blocks %}
+          {% if inner.settings.head-title	 == previous %}
+           {% if inner.settings.child_show_question %}
+          <li>
+             {% assign subtitle = inner.settings.title %}
+             {% unless subtitle   == childprevious %}
+              <a href="#" class="toggle">{{ inner.settings.title }}</a>
+              {% assign childprevious = inner.settings.title %}
+                  <ul class="sub-question-part">
+                    {% for subinner in section.blocks %}
+                    {% if subinner.settings.title == childprevious %}
+                    <li>
+                      <a href="#" class="toggle">{{ subinner.settings.child-title }}</a>
+                      <div class="subinner" style="display: none;">
+                        {{ subinner.settings.answer }}
+                      </div>
+                    </li>
+                    {% endif %}
+                    {% endfor %}
+                  </ul>
+            {% endunless %}
+           
+          </li>
+         {% else %}
+           <li>
+            <a href="#" class="toggle">{{ inner.settings.title }}</a>
+             {% assign subtitle = inner.settings.title %}
+             {% unless subtitle   == childprevious %}
+             
+             <div class="subinner" style="display: none;">
+              {{ inner.settings.answer }}
+            </div>
+            {% endunless %}
+          </li>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+          <p class="have-a-question faq-color-{{block.id}}"><i class="fas fa-info-circle"></i> Have a question you don't see? <a href="/pages/contact-us">Contact Us</a></p>
+        </ul>
+      </li>
+      {% endunless %}
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+</div>
+<style>
+  {% for block in section.blocks %}
+  #faq-{{block.id}}, .faq-color-{{block.id}}.have-a-question, .faq-color-{{block.id}}.have-a-question a{
+    color: {{block.settings.head-title-color}};
+  }
+  {% endfor %}
+</style>
+{% schema %}
+  {
+    "name": "Faq ",
+    "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title"
+    }
+	],
+	"blocks": [
+    {
+      "type": "text",
+      "name": "Faq",
+      "settings": [
+        {
+          "type": "text",
+          "id": "head-title",
+          "label": "Heading Title"
+        },
+        {
+          "type": "color",
+          "id": "head-title-color",
+          "label": "Heading Title Color"
+        },
+        {
+          "type": "textarea",
+          "id": "title",
+          "label": "Question"
+        },
+  		 {
+          "type": "textarea",
+          "id": "child-title",
+          "label": "Child Question"
+        },
+  	 {
+        "type": "checkbox",
+        "id": "child_show_question",
+        "label": "Show Child Question",
+        "default": false
+      },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

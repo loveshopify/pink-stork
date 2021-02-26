@@ -1,0 +1,9 @@
+{% if type == 'block' %}
+  {% assign id = block.id %}
+{% else %}
+  {% assign id = section.id %}
+{% endif %}
+
+<section id="block-{{ id }}" class="prayer-form-block">
+    {{ block.settings.form_code }}
+</section>

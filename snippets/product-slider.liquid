@@ -1,0 +1,126 @@
+{% comment %}Check for related products and increase limit by one (to offset the currently selected product that is removed from the product loop){% endcomment %}
+{% if related_products == true %}
+{% assign limit = limit | plus: 0 %}
+{% assign loop_limit = limit | plus: 1 %}
+{% else %}
+{% assign limit = limit | plus: 0 %}
+{% assign loop_limit = limit | plus: 0 %}
+{% endif %}
+
+{% if per_slide != blank %}
+{% assign visible_products = per_slide %}
+{% else %}
+{% if section.settings.products_per != blank %}
+{% assign visible_products = section.settings.products_per | plus: 0 %}
+{% else %}
+{% assign visible_products = block.settings.products_per | plus: 0 %}
+{% endif %}
+{% endif %}
+
+
+{% if template contains 'product' %}
+{% if limit <= visible_products %}
+{% assign products_length = limit %}
+{% else %}
+{% assign products_length = products.length | minus: 1 %}
+{% endif %}
+{% elsif featured_collection %}
+{% assign products_length = collections[featured_collection].products.length %}
+{% else %}
+{% assign products_length = products.length %}
+{% endif %}
+
+{% assign default = '1400x' %}
+{% assign size1 = '100x' %}
+{% assign size2 = '200x' %}
+{% assign size3 = '300x' %}
+{% assign size4 = '400x' %}
+{% assign size5 = '500x' %}
+{% assign size6 = '600x' %}
+{% assign size7 = '700x' %}
+{% assign size8 = '800x' %}
+{% assign size9 = '900x' %}
+{% assign size10 = '1000x' %}
+<div class="slid_btn">
+  <button class="flickity-prev-next-button previous arrow-left-icon" type="button" aria-label="previous">
+    <svg viewBox="0 0 100 100">
+      <path d="M 10,50 L 60,100 L 62,90 L 22,50  L 62,10 L 60,0 Z" class="arrow"></path>
+    </svg>
+  </button>
+</div>
+<div class="product-slider-icon">
+  <div class="slider-gallery products-slider products-length-{{ products_length }} transparentBackground--{{settings.slideshow_button_style}}"
+       data-products-per-slide="{{ visible_products }}"
+       data-products-limit="{{ limit }}"
+       data-products-available="{{ products_length }}">
+
+    {% for product in products limit: loop_limit %}
+
+    {% if product.id != skip_product.id %}
+    {% assign feature_image = product.featured_image %}
+    <div class="gallery-cell thumbnail visible-{{ visible_products }}">
+      <div class="product-wrap">
+        <div class="relative product_image swap-{{ settings.collection_secondary_image }}">
+          <a href="{{ product.url | within: collection }}" itemprop="url">
+            <div class="image__container">
+              <img  src="{{ feature_image | product_img_url: '50x' }}"
+                   alt="{{ product.title | escape }}"
+                   class="lazyload {{ settings.image_loading_style }}"
+                   data-sizes="auto"
+                   data-src="{{ feature_image | product_img_url: default }}"
+                   data-srcset="
+                                {{ feature_image | product_img_url: default }} {{default | replace: 'x', 'w'}},
+                                {{ feature_image | product_img_url: size1 }} {{size1 | replace: 'x', 'w'}},
+                                {{ feature_image | product_img_url: size2 }} {{size2 | replace: 'x', 'w'}},
+                                {{ feature_image | product_img_url: size3 }} {{size3 | replace: 'x', 'w'}},
+                                {{ feature_image | product_img_url: size4 }} {{size4 | replace: 'x', 'w'}},
+                                {{ feature_image | product_img_url: size5 }} {{size5 | replace: 'x', 'w'}},
+                                {{ feature_image | product_img_url: size6 }} {{size6 | replace: 'x', 'w'}},
+                                {{ feature_image | product_img_url: size7 }} {{size7 | replace: 'x', 'w'}},
+                                {{ feature_image | product_img_url: size8 }} {{size8 | replace: 'x', 'w'}},
+                                {{ feature_image | product_img_url: size9 }} {{size9 | replace: 'x', 'w'}},
+                                {{ feature_image | product_img_url: size10}} {{size10 | replace: 'x', 'w'}}"
+                   />
+
+            </div>
+            {% if settings.collection_secondary_image != blank %}
+            {% if product.images[1] != blank %}
+            {% assign secondary_image = product.images[1] %}
+            {% else %}
+            {% assign secondary_image = product.featured_image %}
+            {% endif %}
+            <img  src="{{ secondary_image | product_img_url: '900x' }}"
+                 class="secondary lazyload"
+                 alt="{{ product.title | escape }}"
+                 />
+            {% endif %}
+          </a>
+          <div class="product-tag-item {% for tag in product.tags %} {% if tag contains 'best-seller' %}best-seller-product{% elsif tag contains 'new' %}new-product{% endif %}{% endfor %}">
+            {% for tag in product.tags %}
+            {% if tag contains 'best-seller' %}
+            <span>Best Seller</span>
+            {% elsif tag contains 'new' %}
+            <span>{{ 'collections.general.new' | t }}</span>
+            {% endif %}
+            {% endfor %} 
+
+          </div>
+          {% include "product-details" %}
+        </div>
+        <a class="product-info__caption {% if settings.thumbnail_hover_enabled %}hidden{% endif %}" href="{{ product.url | within: collection }}" itemprop="url">
+          {% include "product-info" %}
+        </a>
+      </div>
+      {% include 'collection-swatch' %}
+    </div>
+    {% endif %}
+    {% endfor %}
+  </div>
+</div>
+<div class="slid_btn">
+  <button class="flickity-prev-next-button next arrow-right-icon" type="button" aria-label="next">
+    <svg viewBox="0 0 100 100">
+      <path d="M 10,50 L 60,100 L 62,90 L 22,50  L 62,10 L 60,0 Z" class="arrow" transform="translate(100, 100) rotate(180) "></path>
+    </svg>
+  </button>
+</div>

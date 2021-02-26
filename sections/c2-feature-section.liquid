@@ -1,0 +1,64 @@
+<section class="c2-features-sect">
+  <div class="container">
+    <div class="c2-row c2-row-space-btn">
+    
+      <div class="c2-ftr-content">
+        <div class="c2-ftr-loop" >
+          <img src="{{ section.settings.images | img_url:"master" }}">
+        </div>
+        <div class="c2-ftr-content-box center">
+            <h5>{{ section.settings.title }}</h5>
+          {{ section.settings.sub_description }}
+          </div>
+      </div>
+     
+    </div>
+  </div>
+</section>
+
+{% schema %}
+  {
+    "name": "Background Image Text",
+	"class":"background-image-with-text",
+    "settings": [
+     {
+                    "type": "image_picker",
+                    "id": "images",
+                    "label": "Images"
+                },
+				{
+					"type" : "text",
+                    "id" : "title",				
+                    "label" : "Title"
+				},
+				
+				{
+					"type" : "richtext",
+                    "id" : "sub_description",				
+                    "label" : "Description"
+				}
+                
+	],
+"blocks" : [
+		{
+			"type" : "C2_Feature",	
+			"name" : "C2 Feature",
+			"settings" : [
+               
+			]
+		}
+	],	
+    "presets": [
+      {
+        "name": "Background Image Text",
+        "category": "Text"       
+      }
+    ]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

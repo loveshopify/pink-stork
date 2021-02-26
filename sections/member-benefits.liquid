@@ -1,0 +1,84 @@
+<div class="container">
+  <div class="member-benefits-part">
+    <div class="member-benefits-title {{ section.settings.text_alignment }}">
+      <h2>{{ section.settings.text-area-info }}</h2>
+<!--       <div class="feature_divider"></div> -->
+    </div>
+    <div class="sub-benefits-bar">
+      <div class="sub-benefits-loop">
+        {% for block in section.blocks %}
+        <div class="benefits-guarantee-content">
+          <div class="loop-data-guarantee">
+            <div class="benefits-guarantee-loop" >
+              <img src="{{ block.settings.images | img_url:"master" }}">
+            </div>
+            <div class="benefits-guarantee-box ">
+              <div class="sub-description">
+                {{ block.settings.description }}
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+"name": "Member Benefits",
+"settings": [
+	 {
+    "type" : "text",
+    "id" : "text-area-info",				
+    "label" : "Title"
+    },
+	 {
+        "type": "select",
+        "id": "text_alignment",
+        "label": "Text alignment",
+        "options": [
+          {
+            "value": "align_left",
+            "label": "Left"
+          },
+          {
+            "value": "center",
+            "label": "Center"
+          }
+        ],
+        "default": "center"
+      }
+],
+	"blocks" : [
+		{
+			"type" : "text",	
+			"name" : "Member Benefits",
+			"settings" : [
+                 {
+                    "type": "image_picker",
+                    "id": "images",
+                    "label": "Images"
+                },
+				{
+					"type" : "text",
+                    "id" : "title",				
+                    "label" : "Title"
+				},
+				{
+					"type" : "textarea",
+                    "id" : "description",				
+                    "label" : "Description"
+				}
+			]
+		}
+	]
+}
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

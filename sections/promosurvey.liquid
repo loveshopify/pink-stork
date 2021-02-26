@@ -1,0 +1,137 @@
+{% form 'contact' %}
+      {% if form.posted_successfully? %}
+        <p class="quote">{{ 'contact.form.post_success' | t }}</p>
+      {% endif %}
+
+      {% if form.errors %}
+        <p class="quote">{{ 'general.forms.post_error' | t }}</p>
+
+       {% assign message = 'contact.form.message' | t %}
+        <ul class="center">
+          {% for field in form.errors %}
+            {% if field == 'form' %}
+              <li>
+                {{ form.errors.messages[field] }}
+              </li>
+            {% else %}
+              <li>
+                {% assign field_name = field | replace: 'body', message %}
+                {{ 'general.forms.post_field_error_html' | t: field: field_name, error: form.errors.messages[field] }}
+              </li>
+            {% endif %}
+          {% endfor %}
+         </ul>
+      {% endif %}
+
+       <br class="clear" />
+        <div class="name-email-form">
+          <div class="eight columns alpha">
+            {% assign name_attr = 'contact.form.name' | handle %}
+            <label for="contactFormName">{{ 'contact.form.name' | t }} <span class="red">*</span></label>
+            <input type="text" id="contactFormName" name="contact[{{ name_attr }}]" placeholder="{{ 'contact.form.name' | t }}" autocapitalize="words" value="{% if form[name_attr] %}{{ form[name_attr] }}{% elsif customer %}{{ customer.name }}{% endif %}" required="required">
+          </div>
+          <div class="eight columns omega">
+            <label for="contactFormEmail">{{ 'contact.form.email' | t }} <span class="red">*</span></label>
+            <input type="email" id="contactFormEmail" name="contact[email]" placeholder="{{ 'contact.form.email' | t }}" autocorrect="off" autocapitalize="off" value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}" required="required">
+          </div>
+        </div>
+      <div class="shipping-address-part">
+        <div class="add-field-form">
+          <label for="contactFormShipping">SHIPPING ADDRESS* <span class="red">*</span></label>
+          <textarea rows="5" id="contactFormShipping" name="contact[SHIPPING ADDRESS]" placeholder="Your address including city, state, and zip..." required="required"></textarea>
+        </div>
+      </div>
+      <div class="ordering-experience-form">
+        <div class="label-title">
+         <label for="ContactFormOrderingExperience">DID YOU ENJOY YOUR ORDERING EXPERIENCE?</label>
+        </div>
+        <div class="ordering-experience-yes all-data-file">
+        <input type="checkbox" id="ContactFormOrderingYes" name="contact[DID YOU ENJOY YOUR ORDERING EXPERIENCE?]" value="Yes" /> Yes
+        </div>
+        <div class="ordering-experience-no all-data-file">
+         <input type="checkbox" id="ContactFormOrderingNo" name="contact[DID YOU ENJOY YOUR ORDERING EXPERIENCE?]" value="No" /> No
+        </div>
+        <div class="ordering-experience-other all-data-file">
+         <input type="checkbox" id="ContactFormOrderingOther" name="contact[DID YOU ENJOY YOUR ORDERING EXPERIENCE?]" value="Other" /> Other
+        </div>
+      </div>
+      <div class="add-more-details">
+        <label for="ContactFormmessage">IF OTHER, PLEASE TELL US MORE</label>
+        <input type="text" id="ContactFormmessage" name="contact[IF OTHER, PLEASE TELL US MORE]" placeholder="Enter your message">
+      </div>
+      <div class="add-more-details">
+        <label for="ContactFormProduct">IS THERE A PRODUCT YOU WISH WE HAD?*</label>
+        <input type="text" id="ContactFormProduct" name="contact[IS THERE A PRODUCT YOU WISH WE HAD?]" placeholder="Enter your message" required="required">
+      </div>
+      <div class="ordering-experience-form">
+        <div class="label-title">
+          <label for="ContactFormStage">WHAT STAGE OF LIFE ARE YOU IN?*</label>
+        </div>
+        <div class="ordering-experience-yes all-data-file">
+          <input type="checkbox" id="ContactFormPms" name="contact[WHAT STAGE OF LIFE ARE YOU IN?]" value="Yes" /> PMS
+        </div>
+        <div class="ordering-experience-no all-data-file">
+          <input type="checkbox" id="ContactFormTtc" name="contact[WHAT STAGE OF LIFE ARE YOU IN?]" value="No" /> TTC
+        </div>
+        <div class="ordering-experience-other all-data-file">
+          <input type="checkbox" id="ContactFormPregnant" name="contact[WHAT STAGE OF LIFE ARE YOU IN?]" value="Other" /> PREGNANT
+        </div>
+         <div class="ordering-experience-yes all-data-file">
+          <input type="checkbox" id="ContactFormNursing" name="contact[WHAT STAGE OF LIFE ARE YOU IN?]" value="Yes" /> NURSING
+        </div>
+        <div class="ordering-experience-no all-data-file">
+          <input type="checkbox" id="ContactFormMenopause" name="contact[WHAT STAGE OF LIFE ARE YOU IN?]" value="No" /> MENOPAUSE
+        </div>
+        <div class="ordering-experience-other all-data-file">
+          <input type="checkbox" id="ContactFormOther" name="contact[WHAT STAGE OF LIFE ARE YOU IN?]" value="Other" /> OTHER
+        </div>
+      </div>
+      <div class="add-more-details">
+        <label for="ContactFormProduct">IF OTHER, PLEASE ENTER HERE</label>
+        <input type="text" id="ContactFormEnterHere" name="contact[IF OTHER, PLEASE ENTER HERE]" placeholder="Enter your message">
+      </div>
+      <div class="ordering-experience-form">
+        <div class="label-title">
+          <label for="ContactFormOrderingExperience">DID YOU ENJOY CUSTOMER SERVICE EXPERIENCE?*</label>
+        </div>
+        <div class="ordering-experience-yes all-data-file">
+          <input type="checkbox" id="ContactFormServiceYes" name="contact[DID YOU ENJOY CUSTOMER SERVICE EXPERIENCE?]" value="Yes" /> Yes
+        </div>
+        <div class="ordering-experience-no all-data-file">
+          <input type="checkbox" id="ContactFormServiceNo" name="contact[DID YOU ENJOY CUSTOMER SERVICE EXPERIENCE?]" value="No" /> No
+        </div>
+        <div class="ordering-experience-other all-data-file">
+          <input type="checkbox" id="ContactFormServiceOther" name="contact[DID YOU ENJOY CUSTOMER SERVICE EXPERIENCE?]" value="Other" /> Other
+        </div>
+      </div>
+        <div class="add-more-details">
+          <label for="ContactFormmessage">IF OTHER, PLEASE TELL US MORE</label>
+          <input type="text" id="ContactFormMoreMessage" name="contact[IF OTHER, PLEASE TELL US MORE]" placeholder="Enter your message">
+        </div>
+        <div class="add-more-details">
+          <label for="contactFormMessage">COMMENTS <span class="red">*</span></label>
+          <textarea rows="5" id="contactFormMessage" name="contact[body]" placeholder="{{ 'contact.form.message' | t }}" required="required">{% if form.body %}{{ form.body }}{% endif %}</textarea>
+        </div>
+      {% if section.settings.text %}
+        {{ section.settings.text }}
+      {% endif %}
+    <div class="action_bottom sign-up-btn">
+      <div class="submint-contact-form">
+        <input type="submit" class="btn submit action_button" value="Submit Survey" />
+      </div>
+      </div>
+    {% endform %}
+
+{% schema %}
+  {
+    "name": "Promosurvey ",
+	"class":"promosurvey-pages",
+    "settings": []
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

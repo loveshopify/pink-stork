@@ -1,0 +1,27 @@
+{% comment %}
+** Custom HTML - homepage partial **
+- Draggable section
+{% endcomment %}
+
+{% include 'include-custom-html' %}
+
+{% schema %}
+{
+  "name": "Custom HTML",
+  "class": "custom-html-section",
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "custom_html",
+      "label": "Custom html"
+    }
+  ],
+  "presets": [{
+    "name": "Custom HTML",
+    "category": "Content",
+    "settings": {
+    }
+  }]
+}
+
+{% endschema %}

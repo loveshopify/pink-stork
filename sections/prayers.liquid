@@ -1,0 +1,726 @@
+{% comment %}
+** Details page - custom view **
+- Page template
+- Uses blocks
+{% endcomment %}
+
+{% if section.settings.show_banner %}
+
+  {% assign default = '1400x' %}
+  {% assign size1 = '480x' %}
+  {% assign size2 = '765x' %}
+  {% assign size3 = '900x' %}
+  {% assign size4 = '1000x' %}
+  {% assign size5 = '1100x' %}
+  {% assign size6 = '1300x' %}
+  {% assign size7 = '1500x' %}
+  {% assign size8 = '1700x' %}
+  {% assign size9 = '1900x' %}
+  {% assign size10 = '2000x' %}
+
+  <section id="banner-{{section.id}}" class="banner page_banner">
+    {% if section.settings.image != nil %}
+      <img  src="{{ section.settings.image | img_url: '100x', format: 'pjpg' }}"
+            alt="{{ section.settings.image.alt | escape }}"
+            class="lazyload {{ settings.image_loading_style }}"
+            sizes="100vw"
+            data-src="{{ section.settings.image | img_url: default, format: 'pjpg' }}"
+            srcset="
+            {{ section.settings.image | img_url: default, format: 'pjpg' }} {{default | replace: 'x', 'w'}},
+            {{ section.settings.image | img_url: size1, format: 'pjpg' }} {{size1 | replace: 'x', 'w'}},
+            {{ section.settings.image | img_url: size2, format: 'pjpg' }} {{size2 | replace: 'x', 'w'}},
+            {{ section.settings.image | img_url: size3, format: 'pjpg' }} {{size3 | replace: 'x', 'w'}},
+            {{ section.settings.image | img_url: size4, format: 'pjpg' }} {{size4 | replace: 'x', 'w'}},
+            {{ section.settings.image | img_url: size5, format: 'pjpg' }} {{size5 | replace: 'x', 'w'}},
+            {{ section.settings.image | img_url: size6, format: 'pjpg' }} {{size6 | replace: 'x', 'w'}},
+            {{ section.settings.image | img_url: size7, format: 'pjpg' }} {{size7 | replace: 'x', 'w'}},
+            {{ section.settings.image | img_url: size8, format: 'pjpg' }} {{size8 | replace: 'x', 'w'}},
+            {{ section.settings.image | img_url: size9, format: 'pjpg' }} {{size9 | replace: 'x', 'w'}},
+            {{ section.settings.image | img_url: size10, format: 'pjpg' }} {{size10 | replace: 'x', 'w'}}"
+
+             />
+    {% else %}
+      {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg placeholder-svg--banner' }}
+    {% endif %}
+    {% unless section.settings.button1_link != blank and section.settings.button2_link != blank %}
+      {% if section.settings.button1_link != blank %}
+        <a href="{{ section.settings.button1_link }}" class="banner-full-link">
+          {{ section.settings.button1 }}
+        </a>
+      {% endif %}
+      {% if section.settings.button2_link != blank %}
+        <a href="{{ section.settings.button2_link }}" class="banner-full-link">
+          {{ section.settings.button2 }}
+        </a>
+      {% endif %}
+    {% endunless %}
+    {% unless section.settings.pretext == blank and section.settings.title == blank and section.settings.subtitle == blank and section.settings.button1 == blank and section.settings.button2 == blank %}
+      <div class="position-{{ section.settings.text_position }} caption js-caption">
+        <div class="caption-content caption-background-{{ section.settings.caption_background }} caption-transparency-{{ section.settings.caption_background_transparency }} align-{{ section.settings.text_align }}">
+          {% if section.settings.pretext != blank %}
+            <div class="pretext">
+              {{ section.settings.pretext }}
+            </div>
+          {% endif %}
+          {% if section.settings.title != blank %}
+            <h1 class="headline">
+              {{ section.settings.title }}
+            </h1>
+          {% endif %}
+          {% if section.settings.subtitle != blank %}
+            <div class="subtitle">
+              {{ section.settings.subtitle }}
+            </div>
+          {% endif %}
+          {% if section.settings.button1 != blank %}
+            <a {% if section.settings.button1_link != blank %}href="{{ section.settings.button1_link }}"{% endif %} class="action_button first_button highlight-{{ section.settings.button1_highlight }}">
+              {{ section.settings.button1 }}
+            </a>
+          {% endif %}
+          {% if section.settings.button2 != blank %}
+            <a {% if section.settings.button2_link != blank %}href="{{ section.settings.button2_link }}"{% endif %} class="action_button second_button highlight-{{ section.settings.button2_highlight }}">
+              {{ section.settings.button2 }}
+            </a>
+          {% endif %}
+        </div>
+      </div>
+    {% endunless %}
+  </section>
+
+{% endif %}
+
+<a name="pagecontent" id="pagecontent"></a>
+
+<div class="container main content">
+  <div class="sixteen columns page clearfix prayer-wrap">
+    {% unless section.settings.show_banner %}
+      <h1>
+        {{ page.title }}
+      </h1>
+      <div class="feature_divider"></div>
+    {% endunless %}
+    <div>
+      {% include 'page-multi-column', content: page.content %}
+    </div>
+  </div>
+</div>
+
+<style>
+  {% if section.settings.show_banner %}
+    .mobile_nav-fixed--true #pagecontent, .mobile_nav-fixed--false #pagecontent {
+      padding: 0;
+    }
+    @media only screen and (max-width: 479px) {
+      div.content {
+        padding-top: 0;
+      }
+    }
+  {% endif %}
+</style>
+
+<div class="detail-sections prayers">
+{% if section.blocks.size > 0 %}
+  {% for block in section.blocks %}
+    <div {{ block.shopify_attributes }} class="block__{{ block.type }} block__{{ block.id }}
+    {% if block.type == "image_with_text_overlay" and block.settings.wide_display %}
+      under-menu
+    {% elsif block.type == "featured_video" and block.settings.wide_display %}
+      under-menu
+    {% elsif block.type == "featured_collection" %}
+      featured-collection-section
+    {% endif %}
+    ">
+
+      {% if block.type == "image_with_text" %}
+        <!-- Image with text -->
+        {% if block.settings.layout == false %}
+          <div class="container standard--width">
+        {% endif %}
+        <div class="image-with-text
+          featured_collections
+          clearfix across-1 image-align--{{ block.settings.frontpage_image_position }}">
+          <section class="featured-link--section featured-link--image section-{{ forloop.index }}">
+            <div class="featured-link--half featured-link--image {% if block.settings.layout == false %}featured-link--margin{% endif %}">
+              <div class="featured-link--wrap">
+                <a {% if block.settings.link != blank %}href="{{ block.settings.link }}"{% endif %} title="{{ block.settings.title }}">
+                  {% if block.settings.image %}
+                    <img  src="{{ block.settings.image | img_url: '100x' }}"
+                          alt="{% if block.settings.image.alt != blank %}{{ block.settings.image.alt }}{% else %}{{ block.settings.title | escape }}{% endif %}"
+                          class="image-crop--{{ block.settings.image_crop }} lazyload full-width-image {{ settings.image_loading_style }}"
+                          data-sizes="auto"
+                          data-src="{{ block.settings.image | img_url: '1400x' }}"
+                          data-srcset=" {{ block.settings.image | img_url: '2048x' }} 2048w,
+                                        {{ block.settings.image | img_url: '1600x' }} 1600w,
+                                        {{ block.settings.image | img_url: '1200x' }} 1200w,
+                                        {{ block.settings.image | img_url: '1000x' }} 1000w,
+                                        {{ block.settings.image | img_url: '800x' }} 800w,
+                                        {{ block.settings.image | img_url: '600x' }} 600w,
+                                        {{ block.settings.image | img_url: '400x' }} 400w"
+                           />
+                  {% else %}
+                    {% capture i %}{% cycle "1", "2", "3", "4", "5", "6" %}{% endcapture %}
+                    {{ 'collection-' | append: i | placeholder_svg_tag: 'placeholder-svg placeholder-svg--promotions' }}
+                  {% endif %}
+                </a>
+              </div>
+            </div>
+            <div class="featured-link--half">
+              <div class="info text-align--{{block.settings.frontpage_text_align}}">
+                <a {% if block.settings.link != blank %}href="{{ block.settings.link }}"{% endif %} class="collection_title">
+                  {{ block.settings.title }}
+                </a>
+                {% if block.settings.text != blank %}
+                  <div class="description">{{ block.settings.text }}</div>
+                {% endif %}
+                 {% if block.settings.xoxo-image %}
+                <div class="xoxo-image-more">
+                  <img  src="{{ block.settings.xoxo-image | img_url: '100x' }}"
+                       alt="{% if block.settings.xoxo-image.alt != blank %}{{ block.settings.xoxo-image.alt }}{% else %}{{ block.settings.title | escape }}{% endif %}"
+                       class="image-crop--{{ block.settings.image_crop }} lazyload full-width-image {{ settings.image_loading_style }}"
+                       data-sizes="auto"
+                       data-src="{{ block.settings.xoxo-image | img_url: '1400x' }}"
+                       data-srcset=" {{ block.settings.xoxo-image | img_url: '2048x' }} 2048w,
+                                    {{ block.settings.xoxo-image | img_url: '1600x' }} 1600w,
+                                    {{ block.settings.xoxo-image | img_url: '1200x' }} 1200w,
+                                    {{ block.settings.xoxo-image | img_url: '1000x' }} 1000w,
+                                    {{ block.settings.xoxo-image | img_url: '800x' }} 800w,
+                                    {{ block.settings.xoxo-image | img_url: '600x' }} 600w,
+                                    {{ block.settings.xoxo-image | img_url: '400x' }} 400w"
+                       />
+                </div>
+                 {% endif %}
+                {% if block.settings.button_label != blank %}
+                  <a {% if block.settings.link != blank %}href="{{ block.settings.link }}"{% endif %} class="button">
+                    {{ block.settings.button_label }}
+                  </a>
+                {% endif %}
+              </div>
+            </div>
+          </section>
+        </div>
+        <div class="read-less-data">
+              <a href="javascript:void(0);" class="action_button dm-readmore-js">SHOW LESS</a>
+        </div>
+        {% if block.settings.layout == false %}
+          </div>
+        {% endif %}
+
+        {% if block.settings.layout == false %}
+          <style>
+            #shopify-section-{{ section.id }} .featured-link--section {
+              margin-bottom: 3%;
+            }
+            @media only screen and (max-width: 480px) {
+              #shopify-section-{{ section.id }} .featured-link--section {
+                margin-bottom: 10%;
+              }
+            }
+
+            .standard--width .featured-link--margin {
+              margin-left: 0%;
+              margin-right: 3%;
+            }
+
+            .standard--width .image-align--right .featured-link--margin {
+              margin-left: 3%;
+              margin-right: 0%;
+            }
+
+            .standard--width .featured-link--half {
+              width: 45%;
+            }
+          </style>
+        {% endif %}
+
+      {% elsif block.type == "rich_text_and_image" %}
+        <!-- Rich text and image -->
+        {% include 'include-featured-text', type: 'block' %}
+
+      {% elsif block.type == "image_with_text_overlay" %}
+        <!-- Image with text overlay -->
+        {% include 'include-image-with-text-overlay', type: 'block' %}
+
+      {% elsif block.type == "form" %}
+        <!-- Embed code -->
+        {% include 'include-form-code', type: 'block' %}
+
+      {% elsif block.type == "blog_posts" %}
+        <!-- Prayer posts -->
+        {% include 'include-prayer-posts', type: 'block' %}
+      {% endif %}
+    </div>
+  {% endfor %}
+{% endif %}
+</div>
+
+{% schema %}
+
+{
+  "name": "Prayers | details",
+  "class": "page-details-section-home",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_banner",
+      "label": "Show banner",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "info": "1800 x 1000px recommended"
+    },
+    {
+      "type": "richtext",
+      "id": "pretext",
+      "label": "Preheading"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "subtitle",
+      "label": "Subheading"
+    },
+    {
+      "type": "checkbox",
+      "id": "caption_background",
+      "label": "Display solid text background",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "caption_background_transparency",
+      "label": "Enable background transparency"
+    },
+    {
+      "type": "select",
+      "id": "text_position",
+      "label": "Text position",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "text_align",
+      "label": "Text alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "button1",
+      "label": "First button label"
+    },
+    {
+      "type": "url",
+      "id": "button1_link",
+      "label": "First button link"
+    },
+    {
+      "type": "checkbox",
+      "id": "button1_highlight",
+      "label": "Highlight first button"
+    },
+    {
+      "type": "text",
+      "id": "button2",
+      "label": "Second button label"
+    },
+    {
+      "type": "url",
+      "id": "button2_link",
+      "label": "Second button link"
+    },
+    {
+      "type": "checkbox",
+      "id": "button2_highlight",
+      "label": "Highlight second button"
+    }
+  ],
+  "max_blocks": 20,
+  "blocks": [
+    {
+      "type": "image_with_text",
+      "name": "Image with text",
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "layout",
+          "label": "Wide display"
+        },
+        {
+          "type": "select",
+          "id": "frontpage_text_align",
+          "label": "Text alignment",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "frontpage_image_position",
+          "label": "Image position",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ]
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "1024 x 1024px recommended"
+        },
+        {
+          "type": "select",
+          "id": "image_crop",
+          "label": "Image cropping",
+          "default": "none",
+          "info": "Only applied when text area is taller than image.",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "none",
+              "label": "None"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "Your headline"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Promotion description appears here.</p>"
+        },
+		 {
+          "type": "image_picker",
+          "id": "xoxo-image",
+          "label": "Xoxo Image"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button label",
+          "default": "View all"
+        }
+      ]
+    },
+    {
+      "type": "image_with_text_overlay",
+      "name": "Image with text overlay",
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "wide_display",
+          "label": "Wide display",
+          "default": true
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "1800 x 1000px recommended"
+        },
+        {
+          "type": "richtext",
+          "id": "pretext",
+          "label": "Preheading",
+          "default": "<p>This is</p>"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "Your headline"
+        },
+        {
+          "type": "richtext",
+          "id": "subtitle",
+          "label": "Text",
+          "default": "<p>Customize this section</p>"
+        },
+        {
+          "type": "checkbox",
+          "id": "caption_background",
+          "label": "Display solid text background",
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "caption_background_transparency",
+          "label": "Enable background transparency"
+        },
+        {
+          "type": "select",
+          "id": "text_position",
+          "label": "Text position",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "text_align",
+          "label": "Text alignment",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "button1",
+          "label": "First button label",
+          "default": "Button"
+        },
+        {
+          "type": "url",
+          "id": "button1_link",
+          "label": "First link"
+        },
+        {
+          "type": "checkbox",
+          "id": "button1_highlight",
+          "label": "Highlight first button"
+        },
+        {
+          "type": "text",
+          "id": "button2",
+          "label": "Second button label"
+        },
+        {
+          "type": "url",
+          "id": "button2_link",
+          "label": "Second link"
+        },
+        {
+          "type": "checkbox",
+          "id": "button2_highlight",
+          "label": "Highlight second button"
+        }
+      ]
+    },
+    {
+      "type": "rich_text_and_image",
+      "name": "Rich text and image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "Talk about your brand"
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Text",
+          "default": "<p>Use this text to share information about your brand with your customers.</p><p>Describe a product, share announcements, or welcome customers to your store.</p>"
+        },
+        {
+          "type": "select",
+          "id": "text_size",
+          "label": "Text size",
+          "options": [
+            {
+              "value": "regular_text",
+              "label": "Regular"
+            },
+            {
+              "value": "featured_text",
+              "label": "Large"
+            }
+          ],
+          "default": "featured_text"
+        },
+        {
+          "type": "select",
+          "id": "text_alignment",
+          "label": "Text alignment",
+          "options": [
+            {
+              "value": "align_left",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            }
+          ],
+          "default": "center"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button label"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Link"
+        }
+      ]
+    },
+    {
+      "type": "form",
+      "name": "Form",
+      "settings": [
+        {
+          "type": "html",
+          "id": "form_code",
+          "label": "Embed Code",
+          "info": "Copy and paste the embed code from the Form Builder app",
+          "default": "<div style='margin:0 auto;' class='ccFormGenerator' id='zT5d4CDYSjlkjdrPQC8pDkJH3'></div>"
+        }
+      ]
+    },
+    {
+      "type": "blog_posts",
+      "name": "Prayer posts",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "Blog posts"
+        },
+        {
+          "type": "blog",
+          "id": "blog_widget_select",
+          "label": "Blog"
+        },
+        {
+          "type": "range",
+          "id": "home_page_articles",
+          "label": "Posts",
+          "min": 2,
+          "max": 6,
+          "step": 1,
+          "default": 6
+        },
+        {
+          "type": "checkbox",
+          "id": "blog_tags",
+          "label": "Show blog post tags"
+        },
+        {
+          "type": "checkbox",
+          "id": "blog_author",
+          "label": "Show author"
+        },
+        {
+          "type": "checkbox",
+          "id": "blog_date",
+          "label": "Show date",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "blog_comment_count",
+          "label": "Show comment count",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "read_more_link",
+          "label": "Show continue reading link for blog post excerpts",
+          "default": true
+        }
+      ]
+    }
+  ]
+}
+
+{% endschema %}

@@ -1,0 +1,353 @@
+{% comment %}  
+** Contact page - custom view **
+- Page template
+{% endcomment %}  
+
+{% if section.settings.image != nil %}
+<header class="banner center page_banner dark-overlay-{{ section.settings.image_darken }}">
+  <img  src="{{ section.settings.image | img_url: '100x' }}"
+       alt="{% if section.settings.image.alt != blank %}{{ section.settings.image.alt | escape }}{% else %}{{ page.title | escape }}{% endif %}"
+       class="lazyload {{ settings.image_loading_style }}"
+       data-src="{{ section.settings.image | img_url: '1400x', format: 'pjpg' }}"
+       sizes="100vw"  
+       srcset="{{ section.settings.image | img_url: '480x', format: 'pjpg' }} 480w,
+               {{ section.settings.image | img_url: '765x', format: 'pjpg' }} 765w,
+               {{ section.settings.image | img_url: '1400x', format: 'pjpg' }} 1400w,
+               {{ section.settings.image | img_url: '2048x', format: 'pjpg' }} 2048w"
+       />
+  <div class="caption captionOverlay--true">
+    <h1 class="headline">{{ section.settings.title }}</h1>
+    <p class="subtitle">{{ section.settings.subtitle }}</p>
+  </div>
+</header>  
+{% endif %}
+  
+<a name="pagecontent" id="pagecontent"></a>
+
+<div class="container main content">
+
+  <div class="ten columns offset-by-three page clearfix equal-columns--outside-trim form-data-label">
+    {% if section.settings.image == nil %}
+    <div class="page-title-info">
+      {% if settings.page-secondary-img != blank %}
+      <div class="store-logo-img"> 
+        <img src="{{ settings.page-secondary-img | img_url : "master" }}">
+      </div>
+      {% endif %}
+      <h1 class="center title">{{ page.title }}</h1>
+      <div class="store_email_part">
+        <div class="contact_info">
+          <p>{{ section.settings.contact_subtitle }}</p>
+          <p><a href="mailto:{{ section.settings.contact_email }}">{{ section.settings.contact_email }}</a></p>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    {{ page.content }}
+
+    {% form 'contact' %}
+    {% if form.posted_successfully? %}
+    <p class="quote">{{ 'contact.form.post_success' | t }}</p>
+    {% endif %}
+
+    {% if form.errors %}
+    <p class="quote">{{ 'general.forms.post_error' | t }}</p>
+
+    {% assign message = 'contact.form.message' | t %}
+    <ul class="center">
+      {% for field in form.errors %}
+      {% if field == 'form' %}
+      <li>
+        {{ form.errors.messages[field] }}
+      </li>
+      {% else %}
+      <li>
+        {% assign field_name = field | replace: 'body', message %}
+        {{ 'general.forms.post_field_error_html' | t: field: field_name, error: form.errors.messages[field] }}
+      </li>
+      {% endif %}
+      {% endfor %}
+    </ul>
+    {% endif %}
+
+    <br class="clear" />
+    <div class="eight columns alpha">
+      {% assign name_attr = 'contact.form.name' | handle %}
+      <label for="contactFormName">{{ 'contact.form.name' | t }} <span class="red">*</span></label>
+      <input type="text" id="contactFormName" name="contact[{{ name_attr }}]" placeholder="{{ 'contact.placeholder.name' | t }}" autocapitalize="words" value="{% if form[name_attr] %}{{ form[name_attr] }}{% elsif customer %}{{ customer.name }}{% endif %}" required="required">
+    </div>
+    <div class="eight columns omega">
+      <label for="contactFormEmail">{{ 'contact.form.email' | t }} <span class="red">*</span></label>
+      <input type="email" id="contactFormEmail" name="contact[email]" placeholder="{{ 'contact.placeholder.email' | t }}" autocorrect="off" autocapitalize="off" value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}" required="required">
+    </div>
+    <div class="eight columns alpha">
+      <label for="contactFormMessageTitle">Subject</label>
+      <select id="ContactFormSubject" name="contact[Subject]">
+        <option value="PMS">PMS</option>
+        <option value="TTC">TTC</option>
+        <option value="PREGNANT">PREGNANT</option>
+        <option value="NURSING & POSTPARTUM">NURSING & POSTPARTUM</option>
+        <option value="MENOPAUSE">MENOPAUSE</option>
+        <option value="WOMEN’S HEALTH">WOMEN’S HEALTH</option>
+        <option value="BODY CARE">BODY CARE</option>
+        <option value="OTHER">OTHER</option>
+      </select>
+    </div>
+    <div class="eight columns omega">
+      {% assign name_attr = 'contact.form.phone' | t | handle %}
+      <label for="contactFormPhone" class="hidden-label">{{ 'contact.form.phone' | t }}</label>
+      <input type="tel" id="contactFormPhone" name="contact[{{ name_attr }}]" placeholder="{{ 'contact.placeholder.phone' | t }}" pattern="[0-9\-]*" value="{% if form[name_attr] %}{{ form[name_attr] }}{% elsif customer %}{{ customer.phone }}{% endif %}">
+    </div>
+    <label for="contactFormMessage">{{ 'contact.form.message' | t }} <span class="red">*</span></label>
+    <textarea rows="5" id="contactFormMessage" name="contact[body]" placeholder="{{ 'contact.placeholder.message' | t }}" required="required">{% if form.body %}{{ form.body }}{% endif %}</textarea>
+
+    {% if section.settings.text %}
+    {{ section.settings.text }}
+    {% endif %}
+    <div class="action_bottom sign-up-btn">
+      <div class="submint-contact-form">
+        <input type="submit" class="btn submit action_button" value="SUBMIT YOUR MESSAGE" />
+      </div>
+      {% endform %}
+    </div>
+  </div>
+  <div class="right-address-info">
+    <div class="container">
+      <div class="address-right-part-title">
+        <div class="get-touch-title">
+          <div class="address-email-phone">
+            <div class="info-form-address email ">
+              <h2>{{ section.settings.phone-label }}</h2>
+              <div class="address-part-info part-info">
+                <div class="contact-img-info">
+                  <i class="far fa-map-marked"></i>
+                </div>
+                <div class="right-info-contact">
+                  <p>{{ section.settings.phone-text }}</p>
+                </div>
+              </div>
+            </div>
+            <div class="info-form-address email">
+              <h2>{{ section.settings.mail-label }}</h2>
+              <div class="email-part-info part-info">
+                <div class="contact-img-info">
+               <i class="far fa-envelope"></i>
+                  </div>
+                <div class="right-info-contact">
+                  <p><a href="mailto:{{ section.settings.mail-text }}">{{ section.settings.mail-text }}</a></p>
+                </div>
+              </div>
+            </div>
+            <div class="info-form-address address">
+              <h2>{{ section.settings.social-label }}</h2>
+              <div class="email-part-info part-info">
+                <div class="contact-img-info">
+                  <i class="far fa-phone-alt"></i>
+<!--                 <img src="//cdn.shopify.com/s/files/1/0121/9143/2800/files/mail.png?v=1571401161"> -->
+                </div>
+                <div class="store-day-time right-info-contact">
+                  <p><a href="tel:{{- section.settings.phone-number -}}">{{ section.settings.phone-number }}</a></p>
+                  <p class="store-time-open-close">{{ section.settings.store-close-time }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% if section.settings.show_map %}
+  {% include 'include-map' %}
+  {% endif %}
+
+  {% schema %}
+
+  {
+  "name": "Contact",
+  "class": "contact-section",
+  "settings": [
+  {
+  "type": "header",
+  "content": "Banner image"
+  },
+  {
+  "type": "image_picker",
+  "id": "image",
+  "label": "Image",
+  "info": "1800 x 800px recommended"
+  },
+  {
+  "type": "image_picker",
+  "id": "page_logo",
+  "label": "Page Logo"
+  },
+  {
+  "type": "textarea",
+  "id": "contact_subtitle",
+  "label": "Sub Title"
+  },
+  {
+  "type": "text",
+  "id": "contact_email",
+  "label": "Contact Email"
+  },
+  {
+  "type": "checkbox",
+  "id": "image_darken",
+  "label": "Darken banner image",
+  "default": false
+  },
+  {
+  "type": "text",
+  "id": "title",
+  "label": "Heading",
+  "default": "Get in touch"
+  },
+  {
+  "type": "text",
+  "id": "subtitle",
+  "label": "Subheading",
+  "default": "Subheading"
+  },
+  {
+  "type": "richtext",
+  "id": "text",
+  "label": "Text"
+  },
+  {
+  "type": "header",
+  "content": "Map"
+  },
+  {
+  "type": "checkbox",
+  "id": "show_map",
+  "label": "Show map",
+  "default": false
+  },
+  {
+  "type": "checkbox",
+  "id": "wide_display",
+  "label": "Wide display",
+  "default": true
+  },
+  {
+  "type": "text",
+  "id": "map_address",
+  "label": "Address",
+  "info": "Google Maps will find the exact location"
+  },
+  {
+  "type": "range",
+  "id": "map_height",
+  "min": 300,
+  "max": 600,
+  "step": 10,
+  "unit": "px",
+  "label": "Map height",
+  "default": 400
+  },
+  {
+  "type": "range",
+  "id": "zoom_level",
+  "min": 1,
+  "max": 20,
+  "step": 1,
+  "unit": "x",
+  "label": "Map zoom level",
+  "default": 16
+  },
+  {
+  "type": "image_picker",
+  "id": "map_image",
+  "label": "Image",
+  "info": "Displayed when map isn't loaded"
+  },
+  {
+  "type": "text",
+  "id": "phone-label",
+  "label": "Address Label"
+  },
+  {
+  "type": "text",
+  "id": "phone-text",
+  "label": "Address Text"
+  },
+  {
+  "type": "text",
+  "id": "mail-label",
+  "label": "Mail Label"
+  },
+  {
+  "type": "text",
+  "id": "mail-text",
+  "label": "Mail Text"
+  },
+  {
+  "type": "text",
+  "id": "social-label",
+  "label": "Phone Label"
+  },
+  {
+  "type": "text",
+  "id": "phone-number",
+  "label": "Phone Number"
+  },
+  {
+  "type": "text",
+  "id": "store-close-time",
+  "label": "Store Time"
+  },
+  {
+  "type": "header",
+  "content": "API key"
+  },
+  {
+  "type": "text",
+  "id": "api_key",
+  "label": "Google Maps API key",
+  "info": "You’ll need to [register a Google Maps API Key](https://help.shopify.com/manual/using-themes/troubleshooting/map-section-api-key) to display the map"
+  },
+  {
+  "type": "checkbox",
+  "id": "show_pin",
+  "label": "Show pin",
+  "info": "Requires use of API key",
+  "default": true
+  },
+  {
+  "type": "select",
+  "id": "map_style",
+  "label": "Map color scheme",
+  "options": [
+  {
+  "value": "default",
+  "label": "Default"
+  },
+  {
+  "value": "aubergine",
+  "label": "Aubergine"
+  },
+  {
+  "value": "night",
+  "label": "Night"
+  },
+  {
+  "value": "retro",
+  "label": "Retro"
+  },
+  {
+  "value": "silver",
+  "label": "Silver"
+  }
+  ],
+  "default": "default",
+  "info": "Requires use of API key"
+  }
+  ]
+  }
+
+  {% endschema %}
+
+

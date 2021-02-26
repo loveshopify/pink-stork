@@ -1,0 +1,173 @@
+<script>
+  (function () {
+    if (!String.prototype.includes) {
+      String.prototype.includes = function(search, start) {
+        'use strict';
+        if (typeof start !== 'number') {
+          start = 0;
+        }
+  
+        if (start + search.length > this.length) {
+          return false;
+        } else {
+          return this.indexOf(search, start) !== -1;
+        }
+      };
+    }
+  
+  //Here we are setting all our variables, and config for the Mutation Observer.
+  var allOptions = null;
+  var newShipping = null;
+  var newTax = null;
+  var config = { attributes: true, childList: true, characterData: true };
+  const storeCurrencySymbol = document.querySelector('td.product__price > span').innerHTML.replace(/[\d-.,]/g, '').replace(" ", "");
+  
+  //The shippingObserver is going to moniter the shipping total for any changes. If there is a change, it will update the shipping amount with the correct total from the Service Level that was selected.
+  var shippingObserver = new MutationObserver(function(mutations) {
+    if (newShipping !== null && !document.querySelector('.total-line--shipping > td > span').innerHTML.includes(newShipping)) {
+      document.querySelector('.total-line--shipping > td > span').innerHTML = '<span class="money">' + storeCurrencySymbol + newShipping.toFixed(2) + '</span>';
+      sessionStorage.setItem('znshipTotal', newShipping.toFixed(2));
+      sessionStorage.setItem('currencySymbol', storeCurrencySymbol);
+    } 
+  });
+  shippingObserver.observe(document.querySelector('.total-line--shipping > td > span'), config);
+  
+  //The taxObserver is going to moniter the Duty and Tax field. If a Zonos DDP option was selected, we will show and updated the tax total.
+  var taxObserver = new MutationObserver(function(mutations) {
+    if (newTax !== null && !document.querySelector('tr.total-line.total-line--taxes > td > span').innerHTML.includes(newTax)) {
+      document.querySelector('tr.total-line.total-line--taxes > td > span').innerHTML = '<span class="money">' + storeCurrencySymbol + newTax.toFixed(2) + '</span>';
+      sessionStorage.setItem('zntaxTotal', newTax.toFixed(2));
+      document.querySelector('tr.total-line.total-line--taxes > th').innerHTML = 'Duty and Tax';
+      document.querySelector('tr.total-line.total-line--taxes').classList.remove('hidden');
+    }
+    if (document.querySelector('.total-line--taxes > td > span').innerText == undefined) {
+  
+        if(newTax === null) {
+          document.querySelector('tr.total-line.total-line--taxes').classList.add('hidden');
+        }
+    }
+  });
+  taxObserver.observe(document.querySelector('tr.total-line.total-line--taxes > td > span'), config);
+  
+    //Here we are running a check to make sure the service levels have loaded in. Then we trigger the loop to adjust service levels.
+    if (window.location.href.indexOf('payment') === -1) {
+      var waitShippingMehtodsInterval = setInterval(waitForShippingMethods, 100);
+    }
+    
+    function waitForShippingMethods(){
+      if (document.querySelectorAll('.radio-wrapper').length) {
+          clearInterval(waitShippingMehtodsInterval);
+          allOptions = document.querySelectorAll('.radio-wrapper');
+          //This loop is going to run through all available service levels.
+          for ( i = 0; i < allOptions.length; i++) {
+            var dataShippingString = allOptions[i].getAttribute('data-shipping-method');
+            var zTotals = null;
+            var breakdown = null;
+            //If the service level is a Zonos DDP option, we are going to hide 'Duties & Taxes included', only show the shipping total, and hide the duty/tax breakdown.
+                  
+            if (dataShippingString.includes('DDP')) {
+              if (allOptions[i].querySelector("span :nth-child(4)") == null) {
+                allOptions[i].querySelector('span.radio__label__primary > span').classList.add('hidden');
+                breakdown = allOptions[i].querySelector(' span.radio__label__primary > span');
+                zTotals = allOptions[i].querySelector('span.radio__label__primary > span');
+              } else {
+                allOptions[i].querySelector("span :nth-child(4)").classList.add('hidden');
+                breakdown = allOptions[i].querySelector(' span.radio__label__primary > span:nth-child(4)');
+                zTotals = allOptions[i].querySelector('span.radio__label__primary > span:nth-child(4)');
+                }
+      
+              serviceLevel = allOptions[i].querySelector(".radio__label__primary").childNodes[0].nodeValue.replace('Duties & Taxes Included', '');
+              allOptions[i].querySelector(".radio__label__primary").childNodes[0].nodeValue = serviceLevel;
+              var breakdownShipping = breakdown.innerText.split(',')[0].match(/\d+.\d+/);
+              breakdownShipping = breakdownShipping[0].replace(/[^\d-.]/g, '');
+              var shippingCost = Number(breakdownShipping);
+              allOptions[i].querySelector('.content-box__emphasis').innerHTML = '<span class="money">' + storeCurrencySymbol +shippingCost.toFixed(2) + '</span>';
+      
+              //If the customer selects a Zonos DDP option, we are going to set new variables with the shipping and tax amount, to be used in the Mutation Observers above.
+              allOptions[i].onclick = (e) => {
+                var zbreakdownTotals = null;
+                if (e.currentTarget.querySelector('span.radio__label__primary > span:nth-child(4)') == null) {
+                  zbreakdownTotals = e.currentTarget.querySelector('span.radio__label__primary > span');
+                } else {
+                    zbreakdownTotals = e.currentTarget.querySelector('span.radio__label__primary > span:nth-child(4)');
+                  }
+      
+                var zTotalsShipping = zbreakdownTotals.innerText.split(',')[0].match(/\d+.\d+/);
+                newShipping = zTotalsShipping[0].replace(/[^\d-.]/g, '');
+                newShipping = Number(newShipping);
+      
+                var zTotalsTax = zbreakdownTotals.innerText.split(',')[1].match(/\d+.\d+/);
+                newTax = zTotalsTax[0].replace(/[^\d-.]/g, '');
+                newTax = Number(newTax);
+              }; 
+      
+              //If the first service level is a Zonos DDP option, we are going to set and display the duty/tax amount in the totals section, underneath the products.
+              if(i === 0 && zTotals != null) {
+                var zTotalsShipping = zTotals.innerText.split(',')[0].match(/\d+.\d+/);
+                newShipping = zTotalsShipping[0].replace(/[^\d-.]/g, '');
+                newShipping = Number(newShipping);
+      
+                var zTotalsTax = zTotals.innerText.split(',')[1].match(/\d+.\d+/);
+                newTax = zTotalsTax[0].replace(/[^\d-.]/g, '');
+                newTax = Number(newTax);
+      
+                document.querySelector('.total-line--shipping > td > span').innerHTML = '<span class="money">' + storeCurrencySymbol + newShipping.toFixed(2) + '</span>';
+                document.querySelector('tr.total-line.total-line--taxes > td > span').innerHTML = '<span class="money">' + storeCurrencySymbol + newTax.toFixed(2) + '</span>';
+                sessionStorage.setItem('znshipTotal', newShipping.toFixed(2));
+		            sessionStorage.setItem('currencySymbol', storeCurrencySymbol);
+                sessionStorage.setItem('zntaxTotal', newTax.toFixed(2));
+                document.querySelector('tr.total-line.total-line--taxes > th').innerHTML = 'Duty and Tax';
+                document.querySelector('tr.total-line.total-line--taxes').classList.remove('hidden');
+              }
+            } 
+      
+            //In the else, we will hide the duty/tax breakdown under the totals section and ensure we aren't displaying any taxes, since they will not be due on these service levels.
+            else {
+              allOptions[i].onclick = (e) => {
+                newShipping = e.currentTarget.querySelector('.content-box__emphasis').innerHTML.replace(/[^\d-.]/g, '');
+                newTax = null;
+                sessionStorage.setItem('znshipTotal', newShipping);
+		            sessionStorage.setItem('currencySymbol', storeCurrencySymbol);
+                sessionStorage.setItem('zntaxTotal', '');
+              };
+            }
+          }
+        }
+    }
+    
+    //Here we are displaying the broken out duties and taxes in the totals section on the payment and thank you page.
+    if (window.location.href.indexOf('payment') > -1) {
+      var waitPaymentInterval = setInterval(waitForPaymentMethods, 100);
+    }
+    
+    function waitForPaymentMethods(){
+      if (document.querySelectorAll('.section.section--payment-method').length) {
+        clearInterval(waitPaymentInterval);
+      }
+        
+      if (window.location.href.indexOf("payment") > -1) {
+        if (sessionStorage.getItem('znshipTotal') != null) {
+          document.querySelector('.total-line--shipping > td > span').innerHTML = '<span class="money">' + sessionStorage.getItem('currencySymbol') + sessionStorage.getItem('znshipTotal') + '</span>';
+          document.querySelector('tr.total-line.total-line--taxes > td > span').innerHTML = '<span class="money">' + sessionStorage.getItem('currencySymbol') + sessionStorage.getItem('zntaxTotal') + '</span>'; 
+        }
+
+        if (sessionStorage.getItem('zntaxTotal') != "" && sessionStorage.getItem('zntaxTotal') != null) {
+          document.querySelector('tr.total-line.total-line--taxes > th').innerHTML = 'Duty and Tax';
+          document.querySelector('tr.total-line.total-line--taxes').classList.remove('hidden');
+        }
+      }
+    }
+    
+    if (window.location.href.indexOf("thank_you") > -1) {
+      if (sessionStorage.getItem('znshipTotal') != null) {
+        document.querySelector('.total-line--shipping > td > span').innerHTML = '<span class="money">' + sessionStorage.getItem('currencySymbol') + sessionStorage.getItem('znshipTotal') + '</span>';
+        document.querySelector('tr.total-line.total-line--taxes > td > span').innerHTML = '<span class="money">' + sessionStorage.getItem('currencySymbol') + sessionStorage.getItem('zntaxTotal') + '</span>'; 
+      }
+
+      if (sessionStorage.getItem('zntaxTotal') != "" && sessionStorage.getItem('zntaxTotal') != null) {
+        document.querySelector('tr.total-line.total-line--taxes > th').innerHTML = 'Duty and Tax';
+        document.querySelector('tr.total-line.total-line--taxes').classList.remove('hidden');
+      }
+    }
+  })();
+  </script>

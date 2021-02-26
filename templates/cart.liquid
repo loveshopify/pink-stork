@@ -1,0 +1,7 @@
+{% comment %}
+  The contents of the cart.liquid template can be found in /sections/cart-template.liquid
+{% endcomment %}
+
+{% section 'cart-template' %}
+{{ 'idme-cart-style.css' | asset_url | stylesheet_tag }}
+{{ 'idme-cart-template.js' | asset_url | script_tag }}
